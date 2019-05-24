@@ -14,7 +14,12 @@ const SmartyProvider = props => {
   const [token, setToken] = useState(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNEY3dmxHa0I3X0JrT1g5bVQwbjEiLCJ1c2VybmFtZSI6IndtaGFmaXoiLCJ1c2VyX3R5cGUiOiJ1c2VyIn0sImlhdCI6MTU1MzU3MTk1MCwiZXhwIjoxNTg1MTI5NTUwfQ.wz_s0ef7OkizBIztv_6MZp6Uaooapwd6xGukcyBwIEg"
   );
-  const value = useMemo(() => ({ token, setToken }), [token]);
+  const [keyword, setKeyword] = useState(props.keyword);
+
+  const value = useMemo(() => ({ token, setToken, keyword, setKeyword }), [
+    keyword,
+    token
+  ]);
   return <SmartyContext.Provider value={value} {...props} />;
 };
 
@@ -25,8 +30,8 @@ const useQuery = props => {
   }
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const { token } = context;
-  const { entity, keyword, stateFilter } = props;
+  const { token, keyword } = context;
+  const { entity, stateFilter } = props;
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,4 +46,4 @@ const useQuery = props => {
   return { data, isLoading };
 };
 
-export { SmartyProvider, useQuery };
+export { SmartyProvider, SmartyContext, useQuery };
