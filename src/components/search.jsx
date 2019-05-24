@@ -6,6 +6,7 @@ import {
   useAggregation
 } from "../context/smarty-context";
 
+// dump / presentational component
 const Table = ({ rows, columns, limit = 20 }) => {
   return (
     <table className="table table-striped table-bordered">

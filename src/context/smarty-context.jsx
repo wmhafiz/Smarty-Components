@@ -10,11 +10,10 @@ import axios from "axios";
 const baseUrl = "https://smartmap-api.tk/api";
 const SmartyContext = createContext();
 
-const SmartyProvider = props => {
-  const [token, setToken] = useState(
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNEY3dmxHa0I3X0JrT1g5bVQwbjEiLCJ1c2VybmFtZSI6IndtaGFmaXoiLCJ1c2VyX3R5cGUiOiJ1c2VyIn0sImlhdCI6MTU1MzU3MTk1MCwiZXhwIjoxNTg1MTI5NTUwfQ.wz_s0ef7OkizBIztv_6MZp6Uaooapwd6xGukcyBwIEg"
-  );
-  const [keyword, setKeyword] = useState(props.defaultKeyword);
+// top level context provider to handle all shared global states
+const SmartyProvider = ({ token: givenToken, defaultKeyword, ...props }) => {
+  const [token, setToken] = useState(givenToken);
+  const [keyword, setKeyword] = useState(defaultKeyword);
   const [filters, setFilters] = useState({});
 
   const value = useMemo(
@@ -24,52 +23,40 @@ const SmartyProvider = props => {
   return <SmartyContext.Provider value={value} {...props} />;
 };
 
-const useQuery = props => {
-  const context = useContext(SmartyContext);
-  if (!context) {
-    throw new Error("useQuery must be used within SmartyProvider");
-  }
-  const { token, keyword } = context;
-  const [data, setData] = useState({});
+// re-usable fetch hook to lbd api
+const useSmartyFetch = ({ url, defaultValue }) => {
+  const [data, setData] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(false);
-  const { entity, keywordField } = props;
-
   useEffect(() => {
     setIsLoading(true);
-    const searchUrl = `${baseUrl}/${entity}?api_key=${token}&${keywordField}=${keyword}`;
-    // console.log("searchUrl", searchUrl, " for ", entity);
-    // console.log(searchUrl);
-    axios(searchUrl).then(result => {
+    axios(url).then(result => {
       setData(result.data);
       setIsLoading(false);
     });
-  }, [keywordField, token, entity, keyword]);
-
+  }, [url]);
   return { data, isLoading };
 };
 
-const useAggregation = props => {
+// execute search api
+const useQuery = ({ entity, keywordField }) => {
   const context = useContext(SmartyContext);
   if (!context) {
     throw new Error("useQuery must be used within SmartyProvider");
   }
   const { token, keyword } = context;
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { entity, keywordField, keys } = props;
+  const url = `${baseUrl}/${entity}?api_key=${token}&${keywordField}=${keyword}`;
+  return useSmartyFetch({ url, defaultValue: {} });
+};
 
-  useEffect(() => {
-    setIsLoading(true);
-    const searchUrl = `${baseUrl}/${entity}/count?api_key=${token}&${keywordField}=${keyword}&group_by=${keys}`;
-    // console.log("searchUrl", searchUrl, " for ", entity);
-    axios(searchUrl).then(result => {
-      setData(result.data);
-      // console.log("data", result.data);
-      setIsLoading(false);
-    });
-  }, [keywordField, token, entity, keyword, keys]);
-
-  return { data, isLoading };
+// execute count api
+const useAggregation = ({ entity, keywordField, keys }) => {
+  const context = useContext(SmartyContext);
+  if (!context) {
+    throw new Error("useAggregation must be used within SmartyProvider");
+  }
+  const { token, keyword } = context;
+  const url = `${baseUrl}/${entity}/count?api_key=${token}&${keywordField}=${keyword}&group_by=${keys}`;
+  return useSmartyFetch({ url, defaultValue: [] });
 };
 
 export { SmartyProvider, SmartyContext, useAggregation, useQuery };
