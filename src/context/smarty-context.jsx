@@ -14,7 +14,7 @@ const SmartyProvider = props => {
   const [token, setToken] = useState(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNEY3dmxHa0I3X0JrT1g5bVQwbjEiLCJ1c2VybmFtZSI6IndtaGFmaXoiLCJ1c2VyX3R5cGUiOiJ1c2VyIn0sImlhdCI6MTU1MzU3MTk1MCwiZXhwIjoxNTg1MTI5NTUwfQ.wz_s0ef7OkizBIztv_6MZp6Uaooapwd6xGukcyBwIEg"
   );
-  const [keyword, setKeyword] = useState(props.keyword);
+  const [keyword, setKeyword] = useState(props.defaultKeyword);
 
   const value = useMemo(() => ({ token, setToken, keyword, setKeyword }), [
     keyword,
@@ -31,17 +31,17 @@ const useQuery = props => {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const { token, keyword } = context;
-  const { entity, stateFilter } = props;
+  const { entity, keywordField } = props;
 
   useEffect(() => {
     setIsLoading(true);
-    axios(
-      `${baseUrl}/${entity}?api_key=${token}&name=${keyword}&stateFilter=${stateFilter}`
-    ).then(result => {
+    const searchUrl = `${baseUrl}/${entity}?api_key=${token}&${keywordField}=${keyword}`;
+    // console.log(searchUrl);
+    axios(searchUrl).then(result => {
       setData(result.data);
       setIsLoading(false);
     });
-  }, [token, entity, keyword, stateFilter]);
+  }, [keywordField, token, entity, keyword]);
 
   return { data, isLoading };
 };

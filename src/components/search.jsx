@@ -30,9 +30,10 @@ const Table = ({ data, columns }) => {
   );
 };
 
-export const SearchResult = ({ entity, columns }) => {
+export const SearchResult = ({ entity, columns, keywordField }) => {
   const { data, isLoading } = useQuery({
-    entity
+    entity,
+    keywordField
   });
   return isLoading ? <p>Loading..</p> : <Table data={data} columns={columns} />;
 };
@@ -56,12 +57,35 @@ export const Searchbar = () => {
 export const Search = () => {
   return (
     <SmartyProvider
-      keyword={"KFC"}
+      defaultKeyword={"KFC"}
       token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNEY3dmxHa0I3X0JrT1g5bVQwbjEiLCJ1c2VybmFtZSI6IndtaGFmaXoiLCJ1c2VyX3R5cGUiOiJ1c2VyIn0sImlhdCI6MTU1MzU3MTk1MCwiZXhwIjoxNTg1MTI5NTUwfQ.wz_s0ef7OkizBIztv_6MZp6Uaooapwd6xGukcyBwIEg"
     >
       <Searchbar />
       <SearchResult
+        entity="sme"
+        keywordField="company_name"
+        columns={[
+          {
+            label: "SME",
+            key: "company_name"
+          },
+          {
+            label: "City",
+            key: "city"
+          },
+          {
+            label: "State",
+            key: "state"
+          },
+          {
+            label: "Contact",
+            key: "contact"
+          }
+        ]}
+      />
+      <SearchResult
         entity="poi"
+        keywordField="name"
         columns={[
           {
             label: "POI",
