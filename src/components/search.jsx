@@ -5,34 +5,7 @@ import {
   useQuery,
   useAggregation
 } from "../context/smarty-context";
-
-// dump / presentational component
-const Table = ({ rows, columns, limit = 20 }) => {
-  return (
-    <table className="table table-striped table-bordered">
-      <thead className="thead-dark">
-        <tr>
-          {columns &&
-            columns.map((col, i) => (
-              <th key={i} scope="col">
-                {col.label}
-              </th>
-            ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows &&
-          rows
-            .slice(0, limit)
-            .map((row, i) => (
-              <tr key={i}>
-                {columns && columns.map(col => <td>{`${row[col.key]}`}</td>)}
-              </tr>
-            ))}
-      </tbody>
-    </table>
-  );
-};
+import Table from "./presentational/table/bootstrap";
 
 export const SearchResult = ({ entity, columns, keywordField, ...props }) => {
   const { data, isLoading } = useQuery({
@@ -148,10 +121,10 @@ export const Search = () => {
                   label: "POI",
                   key: "name"
                 },
-                // {
-                //   label: "Category1",
-                //   key: "desc1"
-                // },
+                {
+                  label: "Category1",
+                  key: "desc1"
+                },
                 {
                   label: "Category2",
                   key: "desc2"
