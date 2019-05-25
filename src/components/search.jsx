@@ -6,16 +6,26 @@ import {
   useAggregation
 } from "../context/smarty-context";
 import Table from "./presentational/table/bootstrap";
+import PieChart from "./presentational/pie-chart/nivo";
 
-export const SearchResult = ({ entity, columns, keywordField, ...props }) => {
+export const SearchResult = ({
+  entity,
+  columns,
+  keywordField,
+  renderer = "table",
+  ...props
+}) => {
   const { data, isLoading } = useQuery({
     entity,
     keywordField
   });
+
   return isLoading ? (
     <p>Loading..</p>
-  ) : (
+  ) : renderer === "table" ? (
     <Table rows={data.results} columns={columns} {...props} />
+  ) : (
+    <p>Invalid renderer</p>
   );
 };
 
@@ -35,7 +45,15 @@ export const Searchbar = () => {
   );
 };
 
-export const Filters = ({ entity, keywordField, keys, label, ...props }) => {
+export const SingleFilter = ({
+  entity,
+  keywordField,
+  field,
+  label,
+  renderer = "pie",
+  ...props
+}) => {
+  const keys = [field];
   const { data, isLoading } = useAggregation({
     entity,
     keywordField,
@@ -44,20 +62,46 @@ export const Filters = ({ entity, keywordField, keys, label, ...props }) => {
   return isLoading ? (
     <p>Loading...</p>
   ) : (
-    <Table
-      rows={data}
-      columns={[
-        {
-          label,
-          key: "key1"
-        },
-        {
-          label: "Count",
-          key: "count"
+    <div className="border mt-3 py-4" style={{ height: 200 }}>
+      {(() => {
+        switch (renderer) {
+          default:
+          case "pie":
+            return (
+              <>
+                <strong>{label}</strong>
+                <PieChart
+                  rows={data}
+                  mapper={row => ({
+                    id: row.key1,
+                    value: row.count
+                  })}
+                  {...props}
+                />
+              </>
+            );
+          case "table":
+            return (
+              <div className="container">
+                <Table
+                  rows={data}
+                  columns={[
+                    {
+                      label,
+                      key: "key1"
+                    },
+                    {
+                      label: "Value",
+                      key: "count"
+                    }
+                  ]}
+                  {...props}
+                />
+              </div>
+            );
         }
-      ]}
-      {...props}
-    />
+      })()}
+    </div>
   );
 };
 
@@ -69,51 +113,45 @@ export const Search = () => {
     >
       <div className="container">
         <div className="row">
-          <div className="col-3">
-            <Filters
+          <div className="col-6">
+            <SingleFilter
               entity="poi"
               label="State"
               keywordField="name"
-              keys={["state"]}
-              limit={3}
+              field="state"
+              limit={5}
             />
 
-            <Filters
+            <SingleFilter
               entity="poi"
               label="City"
               keywordField="name"
-              keys={["city"]}
-              limit={3}
+              field="city"
+              limit={5}
             />
 
-            <Filters
-              entity="poi"
-              label="Category1"
-              keywordField="name"
-              keys={["desc1"]}
-              limit={3}
-            />
-
-            <Filters
+            <SingleFilter
               entity="poi"
               label="Category2"
               keywordField="name"
-              keys={["desc2"]}
-              limit={3}
+              field="desc2"
+              limit={5}
             />
 
-            <Filters
+            <SingleFilter
               entity="poi"
               label="Category3"
               keywordField="name"
-              keys={["desc3"]}
-              limit={3}
+              field="desc3"
+              limit={5}
+              renderer="table"
             />
           </div>
-          <div className="col-9">
+          <div className="col-6">
             <Searchbar />
             <br />
             <SearchResult
+              renderer="table"
               entity="poi"
               keywordField="name"
               columns={[
