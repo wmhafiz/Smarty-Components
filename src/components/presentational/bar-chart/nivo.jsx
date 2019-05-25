@@ -16,6 +16,11 @@ const MyResponsiveBar = ({ rows, limit, ...props }) => (
     animate={true}
     motionStiffness={90}
     motionDamping={15}
+    tooltip={({ indexValue, value, color }) => (
+      <span style={{ color }}>
+        {indexValue}: {value}
+      </span>
+    )}
     {...props}
   />
 );
