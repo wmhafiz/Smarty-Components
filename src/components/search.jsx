@@ -7,6 +7,7 @@ import {
 } from "../context/smarty-context";
 import Table from "./presentational/table/bootstrap";
 import PieChart from "./presentational/pie-chart/nivo";
+import BarChart from "./presentational/bar-chart/nivo";
 
 export const SearchResult = ({
   entity,
@@ -80,6 +81,13 @@ export const SingleFilter = ({
                 />
               </>
             );
+          case "bar":
+            return (
+              <>
+                <strong>{label}</strong>
+                <BarChart rows={data} {...props} />
+              </>
+            );
           case "table":
             return (
               <div className="container">
@@ -127,29 +135,14 @@ export const Search = () => {
               label="City"
               keywordField="name"
               field="city"
-              limit={5}
-            />
-
-            <SingleFilter
-              entity="poi"
-              label="Category2"
-              keywordField="name"
-              field="desc2"
-              limit={5}
-            />
-
-            <SingleFilter
-              entity="poi"
-              label="Category3"
-              keywordField="name"
-              field="desc3"
-              limit={5}
-              renderer="table"
+              limit={4}
+              renderer="bar"
             />
           </div>
           <div className="col-6">
             <Searchbar />
             <br />
+
             <SearchResult
               renderer="table"
               entity="poi"

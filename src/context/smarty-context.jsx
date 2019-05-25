@@ -56,7 +56,7 @@ const useAggregation = ({ entity, keywordField, keys }) => {
   }
   const { token, keyword } = context;
   const url = `${baseUrl}/${entity}/count?api_key=${token}&${keywordField}=${keyword}&group_by=${keys}`;
-  // console.log(url)
+  // console.log(url);
   return useSmartyFetch({ url, defaultValue: [] });
 };
 
