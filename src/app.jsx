@@ -11,7 +11,7 @@ const NotFoundPage = () => <p>404: Page Not Found</p>;
 
 const routes = {
   "/": () => <Search {...initialStore.search} />,
-  "/widgets": () => <WidgetSettings />
+  "/widgets": () => <WidgetSettings store={initialStore} />
 };
 
 const App = () => {
