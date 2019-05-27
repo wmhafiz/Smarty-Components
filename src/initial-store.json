@@ -9,7 +9,7 @@
             "keywordField": "name",
             "label": "State",
             "field": "state",
-            "limit": 5
+            "limit": 9
           }
         },
         {
@@ -19,7 +19,7 @@
             "keywordField": "name",
             "label": "City",
             "field": "city",
-            "limit": 5
+            "limit": 8
           }
         },
         {
@@ -29,7 +29,7 @@
             "label": "Category",
             "keywordField": "name",
             "field": "desc2",
-            "limit": 3,
+            "limit": 15,
             "renderer": "bar"
           }
         },
@@ -37,7 +37,7 @@
           "name": "filter",
           "props": {
             "entity": "poi",
-            "label": "Subcategory",
+            "label": "Category",
             "keywordField": "name",
             "field": "desc3",
             "limit": 10,
@@ -50,6 +50,14 @@
       "widgets": [
         {
           "name": "searchbar",
+          "props": {}
+        },
+        {
+          "name": "selectedFilters",
+          "props": {}
+        },
+        {
+          "name": "clearFilters",
           "props": {}
         },
         {

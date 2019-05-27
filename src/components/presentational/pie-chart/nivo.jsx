@@ -1,9 +1,13 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 
-const MyResponsivePie = ({ rows, mapper, limit, ...props }) =>
+const MyResponsivePie = ({ rows, mapper, limit, field, addFilter, ...props }) =>
   rows ? (
     <ResponsivePie
+      onClick={(e) => addFilter && addFilter({
+        field: field.toLowerCase(),
+        value: e.id
+      })}
       colors={{ scheme: "nivo" }}
       data={rows.slice(0, limit).map(mapper)}
       margin={{ top: 20, right: 20, bottom: 40, left: 20 }}
@@ -41,7 +45,7 @@ const MyResponsivePie = ({ rows, mapper, limit, ...props }) =>
       {...props}
     />
   ) : (
-    <p>Rendering Chart..</p>
-  );
+      <p>Rendering Chart..</p>
+    );
 
 export default MyResponsivePie;

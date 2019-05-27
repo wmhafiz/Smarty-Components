@@ -1,6 +1,6 @@
 import React from "react";
 
-const Table = ({ rows, columns, limit = 20 }) => {
+const Table = ({ rows, columns, limit = 20, field, addFilter }) => {
   return (
     <table className="table table-striped table-bordered">
       <thead className="thead-dark">
@@ -21,7 +21,14 @@ const Table = ({ rows, columns, limit = 20 }) => {
               <tr key={`row-${i}`}>
                 {columns &&
                   columns.map((col, j) => (
-                    <td key={`row-${i}-td-${j}`}>{`${row[col.key]}`}</td>
+                    <td
+                      onClick={(e) => addFilter && addFilter({
+                        field: field.toLowerCase(),
+                        value: e.currentTarget.textContent,
+                      })}
+                      key={`row-${i}-td-${j}`}>
+                      {`${row[col.key]}`}
+                    </td>
                   ))}
               </tr>
             ))}

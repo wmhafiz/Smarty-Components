@@ -14,10 +14,36 @@ const SmartyContext = createContext();
 const SmartyProvider = ({ token: givenToken, defaultKeyword, ...props }) => {
   const [token, setToken] = useState(givenToken);
   const [keyword, setKeyword] = useState(defaultKeyword);
-  const [filters, setFilters] = useState({});
-
+  const [filters, setFilters] = useState([{
+    field: 'state',
+    value: 'Selangor'
+  }]);
+  const addFilter = (newFilter) => {
+    if (newFilter.field === 'category') {
+      setFilters([
+        ...filters,
+        {
+          field: newFilter.field,
+          value: `[${newFilter.value}]`
+        },
+      ])
+    }
+    else {
+      setFilters([
+        ...filters,
+        newFilter,
+      ])
+    }
+  }
+  const removeFilter = (field) => setFilters(filters.filter(v => v.field !== field))
+  const clearFilters = () => setFilters([])
   const value = useMemo(
-    () => ({ token, setToken, keyword, setKeyword, filters, setFilters }),
+    () => ({
+      token, setToken,
+      keyword, setKeyword,
+      filters, setFilters,
+      addFilter, clearFilters, removeFilter
+    }),
     [keyword, filters, token]
   );
   return <SmartyContext.Provider value={value} {...props} />;
@@ -43,8 +69,11 @@ const useQuery = ({ entity, keywordField }) => {
   if (!context) {
     throw new Error("useQuery must be used within SmartyProvider");
   }
-  const { token, keyword } = context;
-  const url = `${baseUrl}/${entity}?api_key=${token}&${keywordField}=${keyword}`;
+  const { token, keyword, filters } = context;
+  let url = `${baseUrl}/${entity}?${keywordField}=${keyword}`;
+  filters.forEach(({ field, value }) => url += `&${field}=${value}`)
+  // console.log('url', url)
+  url += `&api_key=${token}`
   return useSmartyFetch({ url, defaultValue: {} });
 };
 
@@ -54,9 +83,9 @@ const useAggregation = ({ entity, keywordField, keys }) => {
   if (!context) {
     throw new Error("useAggregation must be used within SmartyProvider");
   }
-  const { token, keyword } = context;
-  const url = `${baseUrl}/${entity}/count?api_key=${token}&${keywordField}=${keyword}&group_by=${keys}`;
-  // console.log(url);
+  const { token, keyword, filters } = context;
+  let url = `${baseUrl}/${entity}/count?api_key=${token}&${keywordField}=${keyword}&group_by=${keys}`;
+  filters.forEach(({ field, value }) => url += `&${field}=${value}`)
   return useSmartyFetch({ url, defaultValue: [] });
 };
 

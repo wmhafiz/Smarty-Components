@@ -1,10 +1,12 @@
 import React from "react";
+import uniqid from 'uniqid';
+
 import { SmartyProvider } from "../context/smarty-context";
 import Widgets from "../components/widgets";
 
 const getWidget = ({ name, props }) => {
   let Widget = Widgets[name];
-  return <Widget {...props} />;
+  return <Widget key={uniqid()} {...props} />;
 };
 
 const Search = props => {

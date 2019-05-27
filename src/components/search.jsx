@@ -25,8 +25,8 @@ export const SearchResult = ({
   ) : renderer === "table" ? (
     <Table rows={data.results} columns={columns} {...props} />
   ) : (
-    <p>Invalid renderer</p>
-  );
+        <p>Invalid renderer</p>
+      );
 };
 
 export const Searchbar = () => {
@@ -46,6 +46,24 @@ export const Searchbar = () => {
   );
 };
 
+export const SelectedFilters = () => {
+  const { filters, removeFilter } = useContext(SmartyContext);
+  return filters ?
+    filters.map(({ field, value }, i) => (
+      <span key={'tag-' + i} onClick={(e) => removeFilter(e.currentTarget.textContent.split(':')[0])} className="badge badge-pill badge-secondary">
+        {`${field}:${value}`}
+      </span>
+    ))
+    : null;
+}
+
+export const ClearFilters = () => {
+  const { filters, clearFilters } = useContext(SmartyContext);
+  return filters.length
+    ? <button type="button" className="btn btn-outline-danger" onClick={() => clearFilters()}>Clear All</button>
+    : null;
+}
+
 export const SingleFilter = ({
   entity,
   keywordField,
@@ -55,6 +73,7 @@ export const SingleFilter = ({
   ...props
 }) => {
   const keys = [field];
+  const { addFilter } = useContext(SmartyContext);
   const { data, isLoading } = useAggregation({
     entity,
     keywordField,
@@ -63,52 +82,61 @@ export const SingleFilter = ({
   return isLoading ? (
     <p>Loading...</p>
   ) : (
-    <div>
-      {(() => {
-        switch (renderer) {
-          default:
-          case "pie":
-            return (
-              <div className="border mt-3 py-4" style={{ height: 200 }}>
-                <strong>{label}</strong>
-                <PieChart
-                  rows={data}
-                  mapper={row => ({
-                    id: row.key1,
-                    value: row.count
-                  })}
-                  {...props}
-                />
-              </div>
-            );
-          case "bar":
-            return (
-              <div className="border mt-3 py-4" style={{ height: 200 }}>
-                <strong>{label}</strong>
-                <BarChart rows={data} {...props} />
-              </div>
-            );
-          case "table":
-            return (
-              <div className="container border mt-3 py-4">
-                <Table
-                  rows={data}
-                  columns={[
-                    {
-                      label,
-                      key: "key1"
-                    },
-                    {
-                      label: "Value",
-                      key: "count"
-                    }
-                  ]}
-                  {...props}
-                />
-              </div>
-            );
-        }
-      })()}
-    </div>
-  );
+      <div>
+        {(() => {
+          switch (renderer) {
+            default:
+            case "pie":
+              return (
+                <div className="border mt-3 py-4" style={{ height: 200 }}>
+                  <strong>{label}</strong>
+                  <PieChart
+                    field={label}
+                    rows={data}
+                    addFilter={addFilter}
+                    mapper={row => ({
+                      id: row.key1,
+                      value: row.count
+                    })}
+                    {...props}
+                  />
+                </div>
+              );
+            case "bar":
+              return (
+                <div className="border mt-3 py-4" style={{ height: 500 }}>
+                  <strong>{label}</strong>
+                  <BarChart
+                    field={label}
+                    rows={data}
+                    addFilter={addFilter}
+                    {...props}
+                  />
+                </div>
+              );
+            case "table":
+              return (
+                <div className="container border mt-3 py-4">
+                  <Table
+                    field={label}
+                    rows={data}
+                    addFilter={addFilter}
+                    columns={[
+                      {
+                        label,
+                        key: "key1"
+                      },
+                      {
+                        label: "Value",
+                        key: "count"
+                      }
+                    ]}
+                    {...props}
+                  />
+                </div>
+              );
+          }
+        })()}
+      </div>
+    );
 };
