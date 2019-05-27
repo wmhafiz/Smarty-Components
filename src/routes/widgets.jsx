@@ -1,12 +1,7 @@
 import React from "react";
-import { JsonEditor as Editor } from 'jsoneditor-react';
-import 'jsoneditor-react/es/editor.min.css';
+import JSONPretty from "react-json-pretty";
+import "react-json-pretty/themes/monikai.css";
 
-const Widgets = ({ store }) => (
-    <Editor
-        value={store}
-        onChange={(e) => console.log('e', e)}
-    />
-);
+const Widgets = ({ store }) => <JSONPretty id="json-pretty" data={store} />;
 
 export default Widgets;

@@ -4,13 +4,12 @@ import { useRoutes } from "hookrouter";
 import Layout from "./components/layout";
 import Search from "./routes/search";
 import WidgetSettings from "./routes/widgets";
-
 import initialStore from "./initial-store";
 
 const NotFoundPage = () => <p>404: Page Not Found</p>;
 
 const routes = {
-  "/": () => <Search {...initialStore.search} />,
+  "/": () => <Search {...initialStore.explore} />,
   "/widgets": () => <WidgetSettings store={initialStore} />
 };
 
