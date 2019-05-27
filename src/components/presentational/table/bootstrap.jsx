@@ -19,7 +19,10 @@ const Table = ({ rows, columns, limit = 20 }) => {
             .slice(0, limit)
             .map((row, i) => (
               <tr key={`row-${i}`}>
-                {columns && columns.map(col => <td>{`${row[col.key]}`}</td>)}
+                {columns &&
+                  columns.map((col, j) => (
+                    <td key={`row-${i}-td-${j}`}>{`${row[col.key]}`}</td>
+                  ))}
               </tr>
             ))}
       </tbody>
