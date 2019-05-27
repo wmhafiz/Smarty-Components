@@ -1,0 +1,84 @@
+{
+  "search": {
+    "sidebar": {
+      "widgets": [
+        {
+          "name": "filter",
+          "props": {
+            "entity": "poi",
+            "keywordField": "name",
+            "label": "State",
+            "field": "state",
+            "limit": 5
+          }
+        },
+        {
+          "name": "filter",
+          "props": {
+            "entity": "poi",
+            "keywordField": "name",
+            "label": "City",
+            "field": "city",
+            "limit": 5
+          }
+        },
+        {
+          "name": "filter",
+          "props": {
+            "entity": "poi",
+            "label": "Category",
+            "keywordField": "name",
+            "field": "desc2",
+            "limit": 3,
+            "renderer": "bar"
+          }
+        },
+        {
+          "name": "filter",
+          "props": {
+            "entity": "poi",
+            "label": "Subcategory",
+            "keywordField": "name",
+            "field": "desc3",
+            "limit": 10,
+            "renderer": "table"
+          }
+        }
+      ]
+    },
+    "main": {
+      "widgets": [
+        {
+          "name": "searchbar",
+          "props": {}
+        },
+        {
+          "name": "searchResult",
+          "props": {
+            "renderer": "table",
+            "entity": "poi",
+            "keywordField": "name",
+            "columns": [
+              {
+                "label": "POI",
+                "key": "name"
+              },
+              {
+                "label": "Category1",
+                "key": "desc1"
+              },
+              {
+                "label": "Category2",
+                "key": "desc2"
+              },
+              {
+                "label": "State",
+                "key": "state"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

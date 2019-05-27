@@ -1,8 +1,13 @@
 import React from "react";
-import { SingleFilter, Searchbar, SearchResult } from "../components/search";
 import { SmartyProvider } from "../context/smarty-context";
+import Widgets from "../components/widgets";
 
-const Search = () => {
+const getWidget = ({ name, props }) => {
+  let Widget = Widgets[name];
+  return <Widget {...props} />;
+};
+
+const Search = props => {
   return (
     <SmartyProvider
       defaultKeyword={"restaurant"}
@@ -10,69 +15,8 @@ const Search = () => {
     >
       <div className="container">
         <div className="row">
-          <div className="col-6">
-            <SingleFilter
-              entity="poi"
-              label="State"
-              keywordField="name"
-              field="state"
-              limit={5}
-            />
-
-            <SingleFilter
-              entity="poi"
-              label="City"
-              keywordField="name"
-              field="city"
-              limit={4}
-            />
-
-            <SingleFilter
-              entity="poi"
-              label="Category"
-              keywordField="name"
-              field="desc2"
-              limit={3}
-              renderer="bar"
-            />
-
-            <SingleFilter
-              entity="poi"
-              label="Subcategory"
-              keywordField="name"
-              field="desc3"
-              limit={10}
-              renderer="table"
-            />
-          </div>
-          <div className="col-6">
-            <Searchbar />
-            <br />
-
-            <SearchResult
-              renderer="table"
-              entity="poi"
-              keywordField="name"
-              columns={[
-                {
-                  label: "POI",
-                  key: "name"
-                },
-                {
-                  label: "Category1",
-                  key: "desc1"
-                },
-                {
-                  label: "Category2",
-                  key: "desc2"
-                },
-                {
-                  label: "State",
-                  key: "state"
-                }
-              ]}
-            />
-          </div>
+          <div className="col-6">{props.sidebar.widgets.map(getWidget)}</div>
+          <div className="col-6">{props.main.widgets.map(getWidget)}</div>
         </div>
       </div>
     </SmartyProvider>

@@ -41,6 +41,7 @@ export const Searchbar = () => {
         value={keyword}
         onChange={event => setKeyword(event.target.value)}
       />
+      <br />
     </div>
   );
 };
