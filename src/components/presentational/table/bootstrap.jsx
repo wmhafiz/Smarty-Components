@@ -7,7 +7,7 @@ const Table = ({ rows, columns, limit = 20 }) => {
         <tr>
           {columns &&
             columns.map((col, i) => (
-              <th key={i} scope="col">
+              <th key={`col-${i}`} scope="col">
                 {col.label}
               </th>
             ))}
@@ -18,7 +18,7 @@ const Table = ({ rows, columns, limit = 20 }) => {
           rows
             .slice(0, limit)
             .map((row, i) => (
-              <tr key={i}>
+              <tr key={`row-${i}`}>
                 {columns && columns.map(col => <td>{`${row[col.key]}`}</td>)}
               </tr>
             ))}
