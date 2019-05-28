@@ -68,16 +68,28 @@
             "keywordField": "name",
             "columns": [
               {
-                "label": "POI",
+                "label": "POI Name",
                 "key": "name"
               },
               {
-                "label": "Category1",
+                "label": "Category 1",
                 "key": "desc1"
               },
               {
-                "label": "Category2",
+                "label": "Category 2",
                 "key": "desc2"
+              },
+              {
+                "label": "Category 3",
+                "key": "desc3"
+              },
+              {
+                "label": "Section",
+                "key": "section"
+              },
+              {
+                "label": "City",
+                "key": "city"
               },
               {
                 "label": "State",

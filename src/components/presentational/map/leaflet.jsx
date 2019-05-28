@@ -26,12 +26,21 @@ const suitcasePoint = new Leaflet.Icon({
   shadowAnchor: [7, 40]
 });
 
-const LeafletMap = ({ markers, zoom = 10 }) => {
+const LeafletMap = ({ rows, columns, zoom = 10 }) => {
   const { token } = useContext(SmartyContext);
+  const markers =
+    rows &&
+    rows.map(row => ({
+      icon: "suitcase",
+      lat: row.location.lat,
+      lng: row.location.lon,
+      text: columns ? columns.map(c => `${c.label}: ${row[c.key]}`) : "No Label"
+    }));
   const bounds = markers
     ? Leaflet.latLngBounds(markers.map(m => [m.lat, m.lng]))
     : null;
   const url = `https://smartmap-api.tk/api/map/wmts?api_key=${token}&request=GetTile&layer=Malaysia:TMSmartmap&format=image/png&TILEMATRIXSET=EPSG:4326&TILEMATRIX=EPSG:4326:{z}&TILEROW={y}&TILECOL={x}`;
+
   return (
     <Map bounds={bounds} zoom={zoom} crs={Leaflet.CRS.EPSG4326}>
       <TileLayer url={url} attribution="TM SmartMap © 2019 Telekom Malaysia" />

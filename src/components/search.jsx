@@ -9,19 +9,6 @@ import PieChart from "./presentational/pie-chart/nivo";
 import BarChart from "./presentational/bar-chart/nivo";
 import LeafletMap from "./presentational/map/leaflet";
 
-const markerMapper = row => ({
-  icon: "suitcase",
-  lat: row.location.lat,
-  lng: row.location.lon,
-  text: [
-    `Name: ${row.name}`,
-    `Category: ${row.desc1} > ${row.desc2} > ${row.desc3}`,
-    `Section: ${row.section}`,
-    `City: ${row.city}`,
-    `State: ${row.city}`
-  ]
-});
-
 export const SearchResult = ({
   entity,
   columns,
@@ -45,9 +32,7 @@ export const SearchResult = ({
           case "map":
             return (
               <div className="border m-2">
-                <LeafletMap
-                  markers={data.results && data.results.map(markerMapper)}
-                />
+                <LeafletMap rows={data.results} columns={columns} />
               </div>
             );
           case "table":
