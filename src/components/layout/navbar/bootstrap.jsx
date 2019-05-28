@@ -18,6 +18,11 @@ const Navbar = () => (
           Widgets
         </a>
       </li>
+      <li className="nav-item">
+        <a className="nav-link" href="/play">
+          Playground
+        </a>
+      </li>
     </ul>
   </nav>
 );
