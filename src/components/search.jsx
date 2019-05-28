@@ -7,6 +7,20 @@ import {
 import Table from "./presentational/table/bootstrap";
 import PieChart from "./presentational/pie-chart/nivo";
 import BarChart from "./presentational/bar-chart/nivo";
+import LeafletMap from "./presentational/map/leaflet";
+
+const markerMapper = row => ({
+  icon: "suitcase",
+  lat: row.location.lat,
+  lng: row.location.lon,
+  text: [
+    `Name: ${row.name}`,
+    `Category: ${row.desc1} > ${row.desc2} > ${row.desc3}`,
+    `Section: ${row.section}`,
+    `City: ${row.city}`,
+    `State: ${row.city}`
+  ]
+});
 
 export const SearchResult = ({
   entity,
@@ -21,12 +35,31 @@ export const SearchResult = ({
   });
 
   return isLoading ? (
-    <p>Loading..</p>
-  ) : renderer === "table" ? (
-    <Table rows={data.results} columns={columns} {...props} />
+    <p>Loading...</p>
   ) : (
-        <p>Invalid renderer</p>
-      );
+    <div>
+      {(() => {
+        switch (renderer) {
+          default:
+            return <p>Invalid Renderer</p>;
+          case "map":
+            return (
+              <div className="border m-2">
+                <LeafletMap
+                  markers={data.results && data.results.map(markerMapper)}
+                />
+              </div>
+            );
+          case "table":
+            return (
+              <div className="container border mt-3 py-4">
+                <Table rows={data.results} columns={columns} {...props} />
+              </div>
+            );
+        }
+      })()}
+    </div>
+  );
 };
 
 export const Searchbar = () => {
@@ -48,21 +81,31 @@ export const Searchbar = () => {
 
 export const SelectedFilters = () => {
   const { filters, removeFilter } = useContext(SmartyContext);
-  return filters ?
-    filters.map(({ field, value }, i) => (
-      <span key={'tag-' + i} onClick={(e) => removeFilter(e.currentTarget.textContent.split(':')[0])} className="badge badge-pill badge-secondary">
-        {`${field}:${value}`}
-      </span>
-    ))
+  return filters
+    ? filters.map(({ field, value }, i) => (
+        <span
+          key={"tag-" + i}
+          onClick={e => removeFilter(e.currentTarget.textContent.split(":")[0])}
+          className="badge badge-pill badge-secondary m-1"
+        >
+          {`${field}:${value}`}
+        </span>
+      ))
     : null;
-}
+};
 
 export const ClearFilters = () => {
   const { filters, clearFilters } = useContext(SmartyContext);
-  return filters.length
-    ? <button type="button" className="btn btn-outline-danger" onClick={() => clearFilters()}>Clear All</button>
-    : null;
-}
+  return filters.length ? (
+    <button
+      type="button"
+      className="btn btn-outline-danger ml-2"
+      onClick={() => clearFilters()}
+    >
+      Clear All
+    </button>
+  ) : null;
+};
 
 export const SingleFilter = ({
   entity,
@@ -82,61 +125,61 @@ export const SingleFilter = ({
   return isLoading ? (
     <p>Loading...</p>
   ) : (
-      <div>
-        {(() => {
-          switch (renderer) {
-            default:
-            case "pie":
-              return (
-                <div className="border mt-3 py-4" style={{ height: 200 }}>
-                  <strong>{label}</strong>
-                  <PieChart
-                    field={label}
-                    rows={data}
-                    addFilter={addFilter}
-                    mapper={row => ({
-                      id: row.key1,
-                      value: row.count
-                    })}
-                    {...props}
-                  />
-                </div>
-              );
-            case "bar":
-              return (
-                <div className="border mt-3 py-4" style={{ height: 500 }}>
-                  <strong>{label}</strong>
-                  <BarChart
-                    field={label}
-                    rows={data}
-                    addFilter={addFilter}
-                    {...props}
-                  />
-                </div>
-              );
-            case "table":
-              return (
-                <div className="container border mt-3 py-4">
-                  <Table
-                    field={label}
-                    rows={data}
-                    addFilter={addFilter}
-                    columns={[
-                      {
-                        label,
-                        key: "key1"
-                      },
-                      {
-                        label: "Value",
-                        key: "count"
-                      }
-                    ]}
-                    {...props}
-                  />
-                </div>
-              );
-          }
-        })()}
-      </div>
-    );
+    <div>
+      {(() => {
+        switch (renderer) {
+          default:
+          case "pie":
+            return (
+              <div className="border mt-3 py-4" style={{ height: 200 }}>
+                <strong>{label}</strong>
+                <PieChart
+                  field={label}
+                  rows={data}
+                  addFilter={addFilter}
+                  mapper={row => ({
+                    id: row.key1,
+                    value: row.count
+                  })}
+                  {...props}
+                />
+              </div>
+            );
+          case "bar":
+            return (
+              <div className="border mt-3 py-4" style={{ height: 500 }}>
+                <strong>{label}</strong>
+                <BarChart
+                  field={label}
+                  rows={data}
+                  addFilter={addFilter}
+                  {...props}
+                />
+              </div>
+            );
+          case "table":
+            return (
+              <div className="container border mt-3 py-4">
+                <Table
+                  field={label}
+                  rows={data}
+                  addFilter={addFilter}
+                  columns={[
+                    {
+                      label,
+                      key: "key1"
+                    },
+                    {
+                      label: "Value",
+                      key: "count"
+                    }
+                  ]}
+                  {...props}
+                />
+              </div>
+            );
+        }
+      })()}
+    </div>
+  );
 };

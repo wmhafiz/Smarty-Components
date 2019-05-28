@@ -26,14 +26,14 @@ const suitcasePoint = new Leaflet.Icon({
   shadowAnchor: [7, 40]
 });
 
-const LeafletMap = ({ markers, center }) => {
+const LeafletMap = ({ markers, zoom = 10 }) => {
   const { token } = useContext(SmartyContext);
-  const { lat, lng, zoom } = center;
-  const position = [lat, lng];
+  const bounds = markers
+    ? Leaflet.latLngBounds(markers.map(m => [m.lat, m.lng]))
+    : null;
   const url = `https://smartmap-api.tk/api/map/wmts?api_key=${token}&request=GetTile&layer=Malaysia:TMSmartmap&format=image/png&TILEMATRIXSET=EPSG:4326&TILEMATRIX=EPSG:4326:{z}&TILEROW={y}&TILECOL={x}`;
-  console.log("url", url);
   return (
-    <Map center={position} zoom={zoom} crs={Leaflet.CRS.EPSG4326}>
+    <Map bounds={bounds} zoom={zoom} crs={Leaflet.CRS.EPSG4326}>
       <TileLayer url={url} attribution="TM SmartMap © 2019 Telekom Malaysia" />
       {markers &&
         markers.map(({ lat, lng, text, icon }) => {
@@ -45,11 +45,7 @@ const LeafletMap = ({ markers, center }) => {
             >
               <Popup>
                 <div className="marker">
-                  <ul>
-                    {text.map(paragraph => (
-                      <li>{paragraph}</li>
-                    ))}
-                  </ul>
+                  <ul>{text && text.map(paragraph => <li>{paragraph}</li>)}</ul>
                 </div>
               </Popup>
             </Marker>

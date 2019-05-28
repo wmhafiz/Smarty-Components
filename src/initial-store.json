@@ -63,7 +63,7 @@
         {
           "name": "searchResult",
           "props": {
-            "renderer": "table",
+            "renderer": "map",
             "entity": "poi",
             "keywordField": "name",
             "columns": [
