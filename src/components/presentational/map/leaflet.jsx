@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import Leaflet from "leaflet";
+import uniqid from "uniqid";
+
 import "./styles.css";
 import { SmartyContext } from "../../../context/smarty-context";
 
@@ -49,12 +51,18 @@ const LeafletMap = ({ rows, columns, zoom = 10 }) => {
           const position = [lat, lng];
           return (
             <Marker
+              key={uniqid()}
               position={position}
               icon={icon === "suitcase" ? suitcasePoint : pointerIcon}
             >
               <Popup>
                 <div className="marker">
-                  <ul>{text && text.map(paragraph => <li>{paragraph}</li>)}</ul>
+                  <ul>
+                    {text &&
+                      text.map(paragraph => (
+                        <li key={uniqid()}>{paragraph}</li>
+                      ))}
+                  </ul>
                 </div>
               </Popup>
             </Marker>

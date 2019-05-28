@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import uniqid from "uniqid";
+
 import {
   SmartyContext,
   useQuery,
@@ -69,7 +71,7 @@ export const SelectedFilters = () => {
   return filters
     ? filters.map(({ field, value }, i) => (
         <span
-          key={"tag-" + i}
+          key={uniqid()}
           onClick={e => removeFilter(e.currentTarget.textContent.split(":")[0])}
           className="badge badge-pill badge-secondary m-1"
         >
